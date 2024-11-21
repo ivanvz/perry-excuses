@@ -31,7 +31,6 @@
 
                 let result = null;
                 let isSpinning = false;
-                let showOutcomes = false;
                 let allOptionsExhausted = false;
                 let remainingOptions = [...initialOptions];
 
@@ -89,27 +88,6 @@
                                             <p class="text-white/70 text-lg">Click the wheel to spin!</p>
                                         `}
                                     </div>
-
-                                    <div class="mt-6 text-center">
-                                        <button 
-                                            id="toggle-outcomes"
-                                            class="px-4 py-2 bg-white/30 hover:bg-white/40 text-white rounded-full 
-                                            transition-colors duration-300 backdrop-blur-sm"
-                                        >
-                                            ${showOutcomes ? 'Hide' : 'Show'} Possible Outcomes
-                                        </button>
-
-                                        ${showOutcomes ? `
-                                            <div class="text-sm text-white mt-4 bg-white/20 rounded-lg p-4">
-                                                <h3 class="font-bold mb-2">Remaining Outcomes:</h3>
-                                                <div class="grid grid-cols-2 gap-2">
-                                                    ${remainingOptions.map((option, index) => `
-                                                        <div key="${index}" class="text-left p-1">${option}</div>
-                                                    `).join('')}
-                                                </div>
-                                            </div>
-                                        ` : ''}
-                                    </div>
                                 </div>
                             `}
                         </div>
@@ -122,6 +100,13 @@
                             }
                             .animate-pulse-color {
                                 animation: pulse-color 2s infinite;
+                            }
+                            @keyframes spin {
+                                from { transform: rotate(0deg); }
+                                to { transform: rotate(360deg); }
+                            }
+                            .animate-spin {
+                                animation: spin 0.5s linear infinite;
                             }
                         </style>
                     `;
@@ -156,23 +141,15 @@
                         }
 
                         render();
-                    }, 2000);
+                    }, 500);  // Reduced from 2000 to 500 milliseconds
                 }
 
                 function setupEventListeners() {
                     const spinWheelElement = document.getElementById('spin-wheel');
-                    const toggleOutcomesButton = document.getElementById('toggle-outcomes');
                     const resetGameButton = document.getElementById('reset-game');
 
                     if (spinWheelElement) {
                         spinWheelElement.addEventListener('click', spinWheel);
-                    }
-
-                    if (toggleOutcomesButton) {
-                        toggleOutcomesButton.addEventListener('click', () => {
-                            showOutcomes = !showOutcomes;
-                            render();
-                        });
                     }
 
                     if (resetGameButton) {
