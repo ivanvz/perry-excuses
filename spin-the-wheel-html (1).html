@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why is Professor Perry MIA?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+    <div id="root" class="flex flex-col items-center justify-center min-h-screen p-6"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const root = document.getElementById('root');
+
+            function SpinTheWheel() {
+                const initialOptions = [
+                    'Car blew up', 
+                    'Car is fucked', 
+                    'Traffic blew up car', 
+                    'Laptop blew up', 
+                    'Plane blew up', 
+                    'Wasn\'t feeling it', 
+                    'Complicit in eco terrorism', 
+                    'Arrested', 
+                    'Detained by customs', 
+                    'Zoom engineers put out a hit on him', 
+                    'Horrendous weather (64 and cloudy)', 
+                    'He\'s here but the mic is off'
+                ];
+
+                let result = null;
+                let isSpinning = false;
+                let showOutcomes = false;
+                let allOptionsExhausted = false;
+                let remainingOptions = [...initialOptions];
+
+                function render() {
+                    root.innerHTML = `
+                        <div class="bg-white/20 backdrop-blur-lg rounded-2xl shadow-2xl border border-white/30 p-8 w-full max-w-md transform transition-all duration-300 hover:scale-105">
+                            <h1 class="text-3xl font-extrabold mb-6 text-center text-white drop-shadow-lg">
+                                Why is Professor Perry MIA?
+                            </h1>
+                            
+                            ${allOptionsExhausted ? `
+                                <div class="text-center">
+                                    <p class="text-3xl font-bold mb-6 animate-pulse-color">
+                                        CLASS MAY ACTUALLY HAPPEN!
+                                    </p>
+                                    <button 
+                                        id="reset-game"
+                                        class="px-6 py-3 bg-white/30 hover:bg-white/40 text-white rounded-full 
+                                        transition-colors duration-300 backdrop-blur-sm"
+                                    >
+                                        Play Again
+                                    </button>
+                                </div>
+                            ` : `
+                                <div>
+                                    <div 
+                                        id="spin-wheel"
+                                        class="mx-auto w-48 h-48 bg-white/30 rounded-full flex items-center justify-center cursor-pointer 
+                                        hover:bg-white/40 transition-all duration-300 shadow-xl 
+                                        ${isSpinning ? 'animate-spin' : ''}"
+                                    >
+                                        <svg 
+                                            xmlns="http://www.w3.org/2000/svg" 
+                                            width="96" 
+                                            height="96" 
+                                            viewBox="0 0 100 100" 
+                                            class="drop-shadow-md"
+                                        >
+                                            <!-- Yin Yang Symbol -->
+                                            <circle cx="50" cy="50" r="45" fill="white" stroke="black" stroke-width="3"/>
+                                            <path d="M50 5 A45 45 0 0 1 50 95" fill="black"/>
+                                            <circle cx="50" cy="25" r="10" fill="black"/>
+                                            <circle cx="50" cy="75" r="10" fill="white" stroke="black"/>
+                                            <circle cx="50" cy="25" r="3" fill="white"/>
+                                            <circle cx="50" cy="75" r="3" fill="black"/>
+                                        </svg>
+                                    </div>
+                                    
+                                    <div class="text-center h-16 mt-6">
+                                        ${isSpinning ? `
+                                            <p class="text-white animate-pulse text-xl">Spinning...</p>
+                                        ` : result ? `
+                                            <p class="text-2xl font-bold text-white drop-shadow-lg">${result}</p>
+                                        ` : `
+                                            <p class="text-white/70 text-lg">Click the wheel to spin!</p>
+                                        `}
+                                    </div>
+
+                                    <div class="mt-6 text-center">
+                                        <button 
+                                            id="toggle-outcomes"
+                                            class="px-4 py-2 bg-white/30 hover:bg-white/40 text-white rounded-full 
+                                            transition-colors duration-300 backdrop-blur-sm"
+                                        >
+                                            ${showOutcomes ? 'Hide' : 'Show'} Possible Outcomes
+                                        </button>
+
+                                        ${showOutcomes ? `
+                                            <div class="text-sm text-white mt-4 bg-white/20 rounded-lg p-4">
+                                                <h3 class="font-bold mb-2">Remaining Outcomes:</h3>
+                                                <div class="grid grid-cols-2 gap-2">
+                                                    ${remainingOptions.map((option, index) => `
+                                                        <div key="${index}" class="text-left p-1">${option}</div>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `}
+                        </div>
+                        <style>
+                            @keyframes pulse-color {
+                                0%, 100% { color: white; }
+                                25% { color: #ff6b6b; }
+                                50% { color: #4ecdc4; }
+                                75% { color: #45b7d1; }
+                            }
+                            .animate-pulse-color {
+                                animation: pulse-color 2s infinite;
+                            }
+                        </style>
+                    `;
+
+                    // Re-add event listeners after rendering
+                    setupEventListeners();
+                }
+
+                function spinWheel() {
+                    if (isSpinning) return;
+                    
+                    if (remainingOptions.length === 0) {
+                        allOptionsExhausted = true;
+                        render();
+                        return;
+                    }
+
+                    isSpinning = true;
+                    result = null;
+                    render();
+
+                    setTimeout(() => {
+                        const randomIndex = Math.floor(Math.random() * remainingOptions.length);
+                        result = remainingOptions[randomIndex];
+                        
+                        remainingOptions = remainingOptions.filter((_, index) => index !== randomIndex);
+                        
+                        isSpinning = false;
+
+                        if (remainingOptions.length === 0) {
+                            allOptionsExhausted = true;
+                        }
+
+                        render();
+                    }, 2000);
+                }
+
+                function setupEventListeners() {
+                    const spinWheelElement = document.getElementById('spin-wheel');
+                    const toggleOutcomesButton = document.getElementById('toggle-outcomes');
+                    const resetGameButton = document.getElementById('reset-game');
+
+                    if (spinWheelElement) {
+                        spinWheelElement.addEventListener('click', spinWheel);
+                    }
+
+                    if (toggleOutcomesButton) {
+                        toggleOutcomesButton.addEventListener('click', () => {
+                            showOutcomes = !showOutcomes;
+                            render();
+                        });
+                    }
+
+                    if (resetGameButton) {
+                        resetGameButton.addEventListener('click', () => {
+                            allOptionsExhausted = false;
+                            result = null;
+                            remainingOptions = [...initialOptions];
+                            render();
+                        });
+                    }
+                }
+
+                // Initial render
+                render();
+            }
+
+            // Initialize the app
+            SpinTheWheel();
+        });
+    </script>
+</body>
+</html>
