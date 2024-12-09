@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Where's (Professor) Perry?</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
@@ -24,8 +25,8 @@
             border-radius: 20px;
             padding: 40px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            width: 90%;
             max-width: 600px;
-            width: 100%;
             text-align: center;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255,255,255,0.1);
@@ -111,6 +112,30 @@
             box-shadow: 0 15px 25px rgba(0,0,0,0.3);
         }
 
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            #wheel {
+                width: 250px;
+                height: 250px;
+            }
+
+            #wheel-image {
+                width: 100px;
+                height: 100px;
+            }
+
+            .btn {
+                padding: 12px 25px;
+            }
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -125,8 +150,8 @@
         </div>
         <div id="result">
             <h2><i class="fas fa-ambulance" style="color: white; margin-right: 10px;"></i>Oh No!</h2>
-            <p style="font-size: 1.2em;">He possibly hit by a bus.</p>
-            <h3 style="color: #F0F0F0;">Get Well Soon!</h3>
+            <p style="font-size: 1.2em;">He possibly got hit by a bus.</p>
+            <h3 style="color: #F0F0F0;">Get well soon! Sending love, and have a Happy Holidays!</h3>
             <button class="btn" onclick="resetGame()">Play Again</button>
         </div>
     </div>
